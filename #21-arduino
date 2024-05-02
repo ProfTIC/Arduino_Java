@@ -1,0 +1,7 @@
+# 2.1. Arduino
+
+[Arduino](https://www.arduino.cc/) es una placa de desarrollo de hardware que permite construir dispositivos digitales y dispositivos interactivos que puedan detectar y controlar objetos del mundo real. Se puede utilizar como un microcontrolador, cuando tiene un programa descargado desde un ordenador y funciona de forma independiente de éste, controlando y alimentando determinados dispositivos y tomando decisiones de acuerdo al programa descargado. Arduino interactúa con el mundo físico gracias a sensores y actuadores. 
+
+| ![Ejemplo de placa Arduino One](img/Arduino-uno-perspective.jpg) | 
+|:--:| 
+| *Ejemplo de placa Arduino One (Imagen de Wikimedia, https://commons.wikimedia.org/wiki/File:Arduino-uno-perspective.jpg)* |

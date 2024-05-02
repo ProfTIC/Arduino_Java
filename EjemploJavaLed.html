@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html lang="es" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Ejemplo de programa java para encender/apagar un LED - Usar Arduino desde java</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="Introduccion.html"><strong aria-hidden="true">1.</strong> Introducción</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Computacionfisica.html"><strong aria-hidden="true">1.1.</strong> Sistemas de computación física</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Sensores.html"><strong aria-hidden="true">1.1.1.</strong> Sensores</a></li><li class="chapter-item expanded "><a href="Microcontroladores.html"><strong aria-hidden="true">1.1.2.</strong> Microcontroladores y tarjetas controladoras</a></li><li class="chapter-item expanded "><a href="Actuadores.html"><strong aria-hidden="true">1.1.3.</strong> Actuadores</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="capitulo2.html"><strong aria-hidden="true">2.</strong> Instalación de las herramientas</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Arduino.html"><strong aria-hidden="true">2.1.</strong> Arduino</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="Tinkercad.html"><strong aria-hidden="true">2.1.1.</strong> TinkerCAD</a></li><li class="chapter-item expanded "><a href="Arduinoide.html"><strong aria-hidden="true">2.1.2.</strong> Arduino IDE</a></li></ol></li><li class="chapter-item expanded "><a href="Java.html"><strong aria-hidden="true">2.2.</strong> Java, Netbeans y librería PanamaHitek_Arduino</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="InstalacionPanamaHitek.html"><strong aria-hidden="true">2.2.1.</strong> Instalación de la librería Panama Hitek</a></li><li class="chapter-item expanded "><a href="EjemploJavaLed.html" class="active"><strong aria-hidden="true">2.2.2.</strong> Ejemplo de programa java para encender/apagar un LED</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="Autoria.html"><strong aria-hidden="true">3.</strong> Autoría</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Usar Arduino desde java</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h2 id="222-ejemplo-de-programa-java-para-encenderapagar-un-led"><a class="header" href="#222-ejemplo-de-programa-java-para-encenderapagar-un-led">2.2.2. Ejemplo de programa java para encender/apagar un LED</a></h2>
+<div style="text-align:justify">
+<p>El proyecto instalado en la sección anterior incorpora varios códigos de ejemplo de uso de la libreríaPanamaHitek_Arduino. A continuación, vamos a explicar cómo encender/apagar un LED de Arduino mediante una interfaz gráfica.</p>
+<p>Necesitamos dos programas:</p>
+<ul>
+<li>Programa de Arduino (<strong>archivo tx_example.ino</strong> de la carpeta <em>Test Packages/Examples.arduino_sketches</em>)</li>
+</ul>
+<p>Es el código de ejecución que debe pasarse a la placa siguiendo el procedimiento que hemos visto anteriormente a través de <a href="#./ArduinoIDE">ArduinoIDE</a>. Este programa comprueba si se recibe un mensaje de encendido/apagado para encender o apagar el LED en el pin 13.</p>
+<ul>
+<li>Fichero de java (<strong>txExample.java</strong>).</li>
+</ul>
+<p>El código de este ejemplo (txExample.java) está en la carpeta <em>Test Packages/Examples.arduino</em>:</p>
+<center>
+<figure>
+<img src="img/EjemploEncenderApagarLED.png"/>
+<figcaption>Fichero txExample.java</figcaption>
+</figure>
+</center>
+<p>Cuando seleccionamos desde Netbeans este fichero, se muestra la interfaz gráfica que consiste en una ventana con dos botones: uno para encender y otro para apagar:</p>
+<center>
+<figure>
+<img src="img/InterfazGraficaLED.png"/>
+<figcaption>Interfaz gráfica del programa</figcaption>
+</figure>
+</center>
+<p>Si queremos ver el código pulsamos sobre la pestaña <strong>Source</strong>. Vamos a estudiar las partes que más nos interesan:</p>
+<ul>
+<li><a href="#222-ejemplo-de-programa-java-para-encenderapagar-un-led">2.2.2. Ejemplo de programa java para encender/apagar un LED</a>
+<ul>
+<li><a href="#crear-una-instancia-de-la-librer%C3%ADa-para-comunicarse-con-arduino"><strong>Crear una instancia de la librería para comunicarse con Arduino</strong></a></li>
+<li><a href="#conectar-el-programa-con-el-puerto-serie-de-la-placa"><strong>Conectar el programa con el puerto serie de la placa</strong></a></li>
+</ul>
+</li>
+</ul>
+<p><a name="instancialibreria"></a></p>
+<h3 id="crear-una-instancia-de-la-librería-para-comunicarse-con-arduino"><a class="header" href="#crear-una-instancia-de-la-librería-para-comunicarse-con-arduino"><strong>Crear una instancia de la librería para comunicarse con Arduino</strong></a></h3>
+<p>Para poder comunicarnos con Arduino, es necesario crear un objeto de la clase PanamaHitek_Arduino. Para poder utilizarlo en cualquier parte del código de la clase, se crea como un atributo:</p>
+<pre><code class="language-java">   
+PanamaHitek_Arduino ino = new PanamaHitek_Arduino();
+
+</code></pre>
+<p>Una vez generado, se podrá acceder a todos los métodos de la librería utilizando el código <code>ino.</code> seguido del nombre de la función correspondiente.</p>
+<p><a name="conectar"></a></p>
+<h3 id="conectar-el-programa-con-el-puerto-serie-de-la-placa"><a class="header" href="#conectar-el-programa-con-el-puerto-serie-de-la-placa"><strong>Conectar el programa con el puerto serie de la placa</strong></a></h3>
+<p>Ya hemos comentado anteriormente que Arduino se conecta a través del puerto USB que simula un puerto serie virtual.</p>
+<p>Para ello, se usará la función <code>ino.arduinoTX</code> incluyendo como argumentos el puerto y la velocidad. En el código de ejemplo se especifica que el nombre de este puerto es COM20. Sin embargo, este valor puede cambiar dependiendo del sistema operativo y de la placa, por lo que es necesario establecer el valor correcto para que el programa funcione.</p>
+<p>¿Dónde podemos obtener el nombre del puerto? Usando el software <a href="#./ArduinoIDE">ArduinoIDE</a>. Recordemos que debíamos seleccionar la placa correspondiente desde el programa:</p>
+<center>
+<figure>
+<img src="img/PuertoArduino.png"/>
+<figcaption>Averiguando el nombre del puerto de Arduino</figcaption>
+</figure>
+</center>
+<p>Como se puede observar, en este caso el puerto es /dev/ttyACM0. Por tanto, cambiamos en el código java el valor COM20 por /dev/ttyACM0:</p>
+<pre><code class="language-java">    public txExample() {
+        initComponents();
+
+        /**
+         * Se inicia la conexión en modo de transmisión (TX) con el puerto /dev/ttyACM0
+         * a una velocidad de 9600 baudios
+         */
+        try {
+            ino.arduinoTX("/dev/ttyACM0", 9600);
+        } catch (ArduinoException ex) {
+            Logger.getLogger(txExample.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+</code></pre>
+<p><a name="enviar"></a>
+<strong>Cómo se envían los datos</strong></p>
+<p>Para enviar los datos a través de java, usaremos la función <strong>sendData</strong> que proporciona la librería PanamaHitek_Arduino, pasando los valores "on" y "off" según corresponda. Por ejemplo, si ejecutamos <code>ino.sendData("on")</code> estaremos enviando la señal de "on" a la placa.</p>
+<p>Como el envío se va a hacer a través de la interfaz gráfica, necesitamos incluir este código en los métodos que gestionen los botones. En Netbeans, seleccionamos el botón encender en la ventana y veremos que el nombre es <em>JButton1</em>:</p>
+<center>
+<figure>
+<img src="img/JButtonEncender.png"/>
+<figcaption>Nombre de los botones</figcaption>
+</figure>
+</center>
+<p>Ahora nos vamos a la pestaña <em>Source</em> y buscamos el método que maneje este botón, que es <em>jButton1ActionPerfomed</em>:</p>
+<pre><code class="language-java">private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    //Se envía el mensaje "on" al Arduino a traves del puerto serie
+    
+    try {
+    
+        ino.sendData("on");
+    
+    } catch (ArduinoException | SerialPortException ex) {
+    
+        Logger.getLogger(txExample.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}                                      
+</code></pre>
+<p>En este código podemos ver la instrucción <code>ino.sendData("on");</code> que envía el mensaje de encender a Arduino. Está en un bloque <code>try-catch</code> que permita gestionar las posibles excepciones o errores que pudieran surgir durante la ejecución. En nuestro caso, solo modificaremos la instrucción de sendData. La parte del manejo de excepciones la dejaremos por defecto.</p>
+<p>Para apagar el LED se usa el botón de apagar (<em>JButton2</em>), con un código similar que cambia al enviar el mensaje "off".</p>
+<p>Si ejecutamos ahora el programa podremos comprobar que el LED se apaga si pulsamos el botón de apagar y se enciende cuando se selecciona la opción de encender.</p>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="InstalacionPanamaHitek.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="Autoria.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="InstalacionPanamaHitek.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="Autoria.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
